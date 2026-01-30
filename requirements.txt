@@ -1,0 +1,29 @@
+# Ryuri - 核心电子书处理工具依赖
+# 所有依赖均为 Python 标准库，无需额外安装
+# Python 版本要求: 3.7+
+
+# 标准库模块（无需安装）:
+# - os
+# - sys
+# - argparse
+# - zipfile
+# - tempfile
+# - json
+# - logging
+# - shutil
+# - re
+# - copy
+# - hashlib
+# - time
+# - typing
+# - contextlib
+# - urllib.parse
+# - xml.etree.ElementTree
+# - xml.dom.minidom
+# - difflib
+# - datetime
+# - concurrent.futures
+# - enum
+# - abc
+# - io
+# - base64

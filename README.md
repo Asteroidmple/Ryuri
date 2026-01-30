@@ -94,17 +94,21 @@ python RyuriCore/RyuriCore.py clean input.epub output.epub --platform zhangyue
 python RyuriCore/RyuriCore.py clean input.epub output.epub --platform kindle
 ```
 
+> **灵感来源**: 文件格式转换功能灵感来源于 [calibre](https://github.com/kovidgoyal/calibre)
+
 #### EPUB 加密/解密
 ```bash
 # 加密 EPUB 文件
-python RyuriCore/RyuriCore.py encrypt input.epub output_encrypted.epub --password your_password
+python RyuriCore/RyuriCore.py encrypt input.epub output_encrypted.epub
 
 # 解密 EPUB 文件
-python RyuriCore/RyuriCore.py decrypt input_encrypted.epub output_decrypted.epub --password your_password
+python RyuriCore/RyuriCore.py decrypt input_encrypted.epub output_decrypted.epub
 
 # 字体加密
 python RyuriCore/RyuriCore.py encrypt-fonts input.epub output_fonts_encrypted.epub
 ```
+
+> **灵感来源**: 加密/解密功能灵感来源于 [epub_tool](https://github.com/cnwxi/epub_tool)
 
 #### 电子书格式转换
 ```bash
@@ -132,6 +136,8 @@ python RyuriCore/RyuriCore.py sanitize input.epub output_clean.epub --filters pr
 # 标准化并优化 CSS
 python RyuriCore/RyuriCore.py sanitize input.epub output_optimized.epub --optimize-css
 ```
+
+> **灵感来源**: 标准化功能灵感来源于 [EpubSanitizer](https://github.com/qinlili23333/EpubSanitizer)
 
 ### Python API 使用
 
@@ -955,6 +961,53 @@ MIT License
 ## 贡献
 
 欢迎提交 Issue 和 Pull Request！
+
+## 开发计划 (To Do List)
+
+### ✅ 已完成
+
+- [x] **EPUB 加密/解密功能**
+  - [x] MD5/SHA256 加密算法
+  - [x] 文件名混淆
+  - [x] 字体文件加密
+  - [x] 与 epub_tool 兼容
+
+- [x] **电子书格式转换功能**
+  - [x] EPUB/MOBI/AZW3/FB2 互转
+  - [x] 设备配置文件支持
+  - [x] 图片压缩和优化
+
+- [x] **EPUB 3.0 标准化功能**
+  - [x] EPUB 2.0 升级到 3.0
+  - [x] HTML5 适配
+  - [x] 多过滤器链式处理
+  - [x] 隐私数据清理
+
+- [x] **批量处理功能**
+  - [x] 多线程并行处理
+  - [x] 任务队列管理
+
+### 🚧 未完成
+
+- [ ] **EPUB 精排版清洗功能** (部分完成)
+  - [x] KoboSpan 文本追踪系统
+  - [x] 弹出式脚注系统
+  - [x] 字体嵌入系统
+  - [ ] 智能段落识别
+  - [ ] 自动目录生成
+  - [ ] 图片自动优化
+
+- [ ] **EPUB 编辑功能**
+  - [ ] 可视化编辑器
+  - [ ] 实时预览
+  - [ ] 代码高亮
+  - [ ] 智能提示
+
+- [ ] **EPUB 浏览功能**
+  - [ ] 内置阅读器
+  - [ ] 阅读进度同步
+  - [ ] 书签管理
+  - [ ] 笔记功能
 
 ## 更新日志
 
