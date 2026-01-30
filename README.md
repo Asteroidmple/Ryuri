@@ -22,12 +22,38 @@
 | **掌阅 (Zhangyue)** | 简化版本，优化排版结构 |
 | **Kindle** | 标准 EPUB3 兼容版本，Send to Kindle 优化 |
 
-### 3. 文件系统抽象
+### 3. EPUB 加密/解密
+支持与 epub_tool 完全兼容的加密解密功能：
+
+- **文件加密**：使用 MD5 哈希和文件名混淆算法保护 EPUB 内容
+- **文件解密**：支持解密受保护的 EPUB 文件
+- **字体加密**：支持字体文件的特殊加密处理
+- **双向兼容**：与 epub_tool 生成的加密文件完全兼容
+
+### 4. 电子书格式转换
+支持多种电子书格式之间的互相转换：
+
+- **EPUB 转换**：支持 EPUB 2.0/3.0 格式转换
+- **MOBI/AZW3 转换**：支持 Kindle 格式的生成
+- **FB2 转换**：支持 FictionBook 格式
+- **批量处理**：支持批量文件转换，提高效率
+
+### 5. EPUB 3.0 标准化
+基于 EpubSanitizer 架构的标准化功能：
+
+- **EPUB 2 升级**：自动将 EPUB 2.0 升级到 EPUB 3.0 标准
+- **HTML5 适配**：将旧版 HTML 转换为 HTML5 标准
+- **CSS 优化**：清理和优化 CSS 样式表
+- **隐私清理**：自动清理阅读器元数据和个人信息
+- **多过滤器链**：支持多个过滤器链式处理
+- **多线程处理**：利用多线程提升处理速度
+
+### 6. 文件系统抽象
 - **内存文件系统 (MemFS)**：高性能内存操作，适合批量处理
 - **磁盘文件系统 (DiskFS)**：直接操作磁盘文件，适合大文件
 - **XML 缓存机制**：自动缓存解析后的 XML，提升性能
 
-### 4. 配置管理
+### 7. 配置管理
 三层配置优先级架构：
 - 代码默认值
 - 配置文件
@@ -42,7 +68,7 @@
 ### 安装步骤
 ```bash
 # 克隆仓库
-git clone https://github.com/yourusername/ryuri.git
+git clone https://github.com/Asteroidmple/Ryuri.git
 cd ryuri
 
 # 直接使用
@@ -68,6 +94,45 @@ python RyuriCore/RyuriCore.py clean input.epub output.epub --platform zhangyue
 python RyuriCore/RyuriCore.py clean input.epub output.epub --platform kindle
 ```
 
+#### EPUB 加密/解密
+```bash
+# 加密 EPUB 文件
+python RyuriCore/RyuriCore.py encrypt input.epub output_encrypted.epub --password your_password
+
+# 解密 EPUB 文件
+python RyuriCore/RyuriCore.py decrypt input_encrypted.epub output_decrypted.epub --password your_password
+
+# 字体加密
+python RyuriCore/RyuriCore.py encrypt-fonts input.epub output_fonts_encrypted.epub
+```
+
+#### 电子书格式转换
+```bash
+# EPUB 转 MOBI
+python RyuriCore/RyuriCore.py convert input.epub output.mobi --output-format mobi
+
+# EPUB 转 AZW3
+python RyuriCore/RyuriCore.py convert input.epub output.azw3 --output-format azw3
+
+# EPUB 转 FB2
+python RyuriCore/RyuriCore.py convert input.epub output.fb2 --output-format fb2
+
+# MOBI 转 EPUB
+python RyuriCore/RyuriCore.py convert input.mobi output.epub --output-format epub
+```
+
+#### EPUB 3.0 标准化
+```bash
+# 标准化 EPUB（升级到 EPUB 3.0）
+python RyuriCore/RyuriCore.py sanitize input.epub output_sanitized.epub
+
+# 标准化并清理隐私数据
+python RyuriCore/RyuriCore.py sanitize input.epub output_clean.epub --filters privacy,metadata
+
+# 标准化并优化 CSS
+python RyuriCore/RyuriCore.py sanitize input.epub output_optimized.epub --optimize-css
+```
+
 ### Python API 使用
 
 ```python
@@ -86,6 +151,69 @@ success = core.clean(
 # 使用 EPUBCleaner 直接
  cleaner = EPUBCleaner(target_platform='duokan')
 success = cleaner.clean('input.epub', 'output.epub')
+
+# EPUB 加密/解密
+from RyuriCore.RyuriCore import EPUBEncryptor
+
+# 创建加密器
+encryptor = EPUBEncryptor(password='your_password')
+
+# 加密 EPUB
+encryptor.encrypt('input.epub', 'output_encrypted.epub')
+
+# 解密 EPUB
+encryptor.decrypt('input_encrypted.epub', 'output_decrypted.epub')
+
+# 字体加密
+encryptor.encrypt_fonts('input.epub', 'output_fonts_encrypted.epub')
+
+# 电子书格式转换
+from RyuriCore.RyuriCore import EbookConverter
+
+# 创建转换器
+converter = EbookConverter(
+    output_format='mobi',  # 可选: 'epub', 'mobi', 'azw3', 'fb2'
+    input_profile='default',
+    output_profile='kindle'
+)
+
+# 执行转换
+converter.convert('input.epub', 'output.mobi')
+
+# EPUB 3.0 标准化
+from RyuriCore.RyuriCore import EPUBSanitizer, SanitizerConfig
+
+# 创建配置
+sanitizer_config = SanitizerConfig(
+    filters=['default', 'privacy'],  # 过滤器列表
+    epub_version='3.0',              # 目标 EPUB 版本
+    threads='multi',                 # 多线程模式
+    optimize_css=True,               # 优化 CSS
+    remove_metadata=True             # 移除隐私元数据
+)
+
+# 创建标准化器
+sanitizer = EPUBSanitizer(config=sanitizer_config)
+
+# 执行标准化
+sanitizer.sanitize('input.epub', 'output_sanitized.epub')
+
+# 批量处理
+from RyuriCore.RyuriCore import BatchProcessor
+
+# 创建批处理器
+batch = BatchProcessor(
+    processor='sanitizer',  # 可选: 'cleaner', 'encryptor', 'converter', 'sanitizer'
+    config={'target_platform': 'duokan'}
+)
+
+# 添加任务
+batch.add_task('input1.epub', 'output1.epub')
+batch.add_task('input2.epub', 'output2.epub')
+batch.add_task('input3.epub', 'output3.epub')
+
+# 执行批量处理
+batch.process()
 ```
 
 ### 高级用法
@@ -101,11 +229,142 @@ config = {
         'preserve_original': False,
         'add_kobospan': True,
         'process_footnotes': True
+    },
+    'encryptor': {
+        'enabled': True,
+        'algorithm': 'md5',           # 加密算法
+        'obfuscate_filenames': True,  # 混淆文件名
+        'encrypt_fonts': True         # 加密字体文件
+    },
+    'converter': {
+        'verbose': 1,                 # 详细输出级别
+        'input_profile': 'default',   # 输入配置文件
+        'output_profile': 'kindle',   # 输出配置文件
+        'preserve_cover': True,       # 保留封面
+        'embed_fonts': False          # 嵌入字体
+    },
+    'sanitizer': {
+        'enabled': True,
+        'filters': 'default,privacy', # 过滤器列表
+        'threads': 'multi',           # 线程模式
+        'epub_ver': '3.0',            # 目标 EPUB 版本
+        'sanitize_ncx': True,         # 清理 NCX
+        'correct_mime': True,         # 修正 MIME 类型
+        'optimize_css': True,         # 优化 CSS
+        'remove_metadata': True,      # 移除隐私元数据
+        'publisher_mode': False       # 出版商模式
     }
 }
 
 # 使用自定义配置初始化
 core = RyuriCore(config=config)
+```
+
+#### 加密/解密高级配置
+```python
+from RyuriCore.RyuriCore import EPUBEncryptor, EncryptorConfig
+
+# 创建加密配置
+encryptor_config = EncryptorConfig(
+    password='your_password',
+    algorithm='md5',              # 加密算法: 'md5', 'sha256'
+    obfuscate_filenames=True,     # 是否混淆文件名
+    encrypt_fonts=True,           # 是否加密字体
+    encrypt_images=False,         # 是否加密图片
+    compatibility='epub_tool'     # 兼容性模式: 'epub_tool', 'ryuri'
+)
+
+# 创建加密器
+encryptor = EPUBEncryptor(config=encryptor_config)
+
+# 加密
+encryptor.encrypt('input.epub', 'output.epub')
+
+# 解密
+encryptor.decrypt('input.epub', 'output.epub')
+```
+
+#### 格式转换高级配置
+```python
+from RyuriCore.RyuriCore import EbookConverter, ConverterConfig
+
+# 创建转换配置
+converter_config = ConverterConfig(
+    output_format='mobi',         # 输出格式: 'epub', 'mobi', 'azw3', 'fb2'
+    input_profile='default',      # 输入配置文件
+    output_profile='kindle',      # 输出配置文件
+    preserve_cover=True,          # 保留封面
+    embed_fonts=False,            # 嵌入字体
+    compress_images=True,         # 压缩图片
+    image_quality=85,             # 图片质量 (0-100)
+    max_image_size=1024,          # 最大图片尺寸
+    table_of_contents=True,       # 生成目录
+    metadata_handling='preserve'  # 元数据处理: 'preserve', 'remove', 'update'
+)
+
+# 创建转换器
+converter = EbookConverter(config=converter_config)
+
+# 执行转换
+converter.convert('input.epub', 'output.mobi')
+```
+
+#### 标准化高级配置
+```python
+from RyuriCore.RyuriCore import EPUBSanitizer, SanitizerConfig
+
+# 创建标准化配置
+sanitizer_config = SanitizerConfig(
+    # 基础配置
+    epub_version='3.0',           # 目标 EPUB 版本: '2.0', '3.0'
+    threads='multi',              # 线程模式: 'single', 'multi'
+    
+    # 过滤器配置
+    filters=['default', 'privacy', 'metadata', 'css'],
+    # 可选过滤器:
+    # - 'default': 默认清理
+    # - 'privacy': 清理隐私数据
+    # - 'metadata': 清理元数据
+    # - 'css': 优化 CSS
+    # - 'html': 优化 HTML
+    # - 'fonts': 优化字体
+    # - 'images': 优化图片
+    
+    # 处理选项
+    sanitize_ncx=True,            # 清理 NCX 文件
+    correct_mime=True,            # 修正 MIME 类型
+    xml_cache=True,               # 启用 XML 缓存
+    
+    # 优化选项
+    optimize_css=True,            # 优化 CSS
+    optimize_html=True,           # 优化 HTML
+    minify_css=False,             # 压缩 CSS
+    minify_html=False,            # 压缩 HTML
+    
+    # 隐私选项
+    remove_metadata=True,         # 移除隐私元数据
+    remove_reading_data=True,     # 移除阅读数据
+    remove_annotations=False,     # 移除注释
+    
+    # 高级选项
+    publisher_mode=False,         # 出版商模式
+    epub3_guess_toc=False,        # 猜测目录
+    epub3_correct_spine=True,     # 修正 spine
+    compress=0                    # 压缩级别 (0-9)
+)
+
+# 创建标准化器
+sanitizer = EPUBSanitizer(config=sanitizer_config)
+
+# 执行标准化
+sanitizer.sanitize('input.epub', 'output.epub')
+
+# 批量标准化
+sanitizer.sanitize_batch([
+    ('input1.epub', 'output1.epub'),
+    ('input2.epub', 'output2.epub'),
+    ('input3.epub', 'output3.epub')
+])
 ```
 
 #### 文件系统操作
@@ -151,7 +410,12 @@ files = disk_fs.get_all_files()
         'output_profile': 'default' # 输出配置文件
     },
     'encryptor': {
-        'enabled': True            # 是否启用加密
+        'enabled': True,           # 是否启用加密
+        'algorithm': 'md5',        # 加密算法: 'md5', 'sha256'
+        'obfuscate_filenames': True,  # 是否混淆文件名
+        'encrypt_fonts': True,     # 是否加密字体
+        'encrypt_images': False,   # 是否加密图片
+        'compatibility': 'epub_tool'  # 兼容性模式
     },
     'sanitizer': {
         'filters': 'default,privacy',  # 过滤器列表
@@ -164,7 +428,11 @@ files = disk_fs.get_all_files()
         'publisher_mode': False,       # 出版商模式
         'epub3_guess_toc': False,      # 是否猜测目录
         'epub3_correct_spine': True,   # 是否修正 spine
-        'compress': 0                  # 压缩级别
+        'compress': 0,                 # 压缩级别
+        'optimize_css': True,          # 是否优化 CSS
+        'optimize_html': True,         # 是否优化 HTML
+        'remove_metadata': True,       # 是否移除隐私元数据
+        'remove_reading_data': True    # 是否移除阅读数据
     },
     'reader': {
         'enabled': True             # 是否启用阅读器
@@ -181,6 +449,68 @@ files = disk_fs.get_all_files()
     }
 }
 ```
+
+### 加密/解密配置 (EncryptorConfig)
+
+| 参数 | 类型 | 默认值 | 说明 |
+|------|------|--------|------|
+| `password` | str | 必填 | 加密密码 |
+| `algorithm` | str | 'md5' | 加密算法: 'md5', 'sha256' |
+| `obfuscate_filenames` | bool | True | 是否混淆文件名 |
+| `encrypt_fonts` | bool | True | 是否加密字体文件 |
+| `encrypt_images` | bool | False | 是否加密图片文件 |
+| `compatibility` | str | 'epub_tool' | 兼容性模式: 'epub_tool', 'ryuri' |
+
+### 格式转换配置 (ConverterConfig)
+
+| 参数 | 类型 | 默认值 | 说明 |
+|------|------|--------|------|
+| `output_format` | str | 'epub' | 输出格式: 'epub', 'mobi', 'azw3', 'fb2' |
+| `input_profile` | str | 'default' | 输入设备配置文件 |
+| `output_profile` | str | 'default' | 输出设备配置文件 |
+| `preserve_cover` | bool | True | 是否保留封面 |
+| `embed_fonts` | bool | False | 是否嵌入字体 |
+| `compress_images` | bool | True | 是否压缩图片 |
+| `image_quality` | int | 85 | 图片质量 (0-100) |
+| `max_image_size` | int | 1024 | 最大图片尺寸 |
+| `table_of_contents` | bool | True | 是否生成目录 |
+| `metadata_handling` | str | 'preserve' | 元数据处理: 'preserve', 'remove', 'update' |
+
+### 标准化配置 (SanitizerConfig)
+
+| 参数 | 类型 | 默认值 | 说明 |
+|------|------|--------|------|
+| `epub_version` | str | '3.0' | 目标 EPUB 版本: '2.0', '3.0' |
+| `threads` | str | 'multi' | 线程模式: 'single', 'multi' |
+| `filters` | list | ['default'] | 过滤器列表 |
+| `sanitize_ncx` | bool | True | 是否清理 NCX 文件 |
+| `correct_mime` | bool | True | 是否修正 MIME 类型 |
+| `xml_cache` | bool | True | 是否启用 XML 缓存 |
+| `optimize_css` | bool | True | 是否优化 CSS |
+| `optimize_html` | bool | True | 是否优化 HTML |
+| `minify_css` | bool | False | 是否压缩 CSS |
+| `minify_html` | bool | False | 是否压缩 HTML |
+| `remove_metadata` | bool | True | 是否移除隐私元数据 |
+| `remove_reading_data` | bool | True | 是否移除阅读数据 |
+| `remove_annotations` | bool | False | 是否移除注释 |
+| `publisher_mode` | bool | False | 是否启用出版商模式 |
+| `epub3_guess_toc` | bool | False | 是否猜测目录 |
+| `epub3_correct_spine` | bool | True | 是否修正 spine |
+| `compress` | int | 0 | 压缩级别 (0-9) |
+
+#### 过滤器说明
+
+| 过滤器 | 说明 |
+|--------|------|
+| `default` | 默认清理，包括修复常见错误 |
+| `privacy` | 清理隐私数据，如阅读进度、书签等 |
+| `metadata` | 清理和标准化元数据 |
+| `css` | 优化和清理 CSS 样式表 |
+| `html` | 优化和清理 HTML 结构 |
+| `fonts` | 优化字体文件和引用 |
+| `images` | 优化图片文件 |
+| `ncx` | 清理和修复 NCX 目录文件 |
+| `opf` | 清理和修复 OPF 包文件 |
 
 #### 配置操作方法
 ```python
@@ -265,6 +595,203 @@ clean(input_path: str, output_path: str, target_platform: str = "generic", **kwa
 - `output_path` (str): 输出文件路径
 - `target_platform` (str): 目标平台
 - `**kwargs`: 额外参数
+
+### EPUBEncryptor 类
+
+EPUB 加密/解密器，支持与 epub_tool 兼容的加密算法。
+
+#### 构造函数
+```python
+EPUBEncryptor(password: str, config: Optional[EncryptorConfig] = None)
+```
+
+**参数：**
+- `password` (str): 加密/解密密码
+- `config` (EncryptorConfig, optional): 加密配置
+
+#### 主要方法
+
+##### encrypt
+```python
+encrypt(input_path: str, output_path: str) -> bool
+```
+加密 EPUB 文件。
+
+**参数：**
+- `input_path` (str): 输入 EPUB 文件路径
+- `output_path` (str): 输出加密文件路径
+
+**返回：**
+- `bool`: 是否成功
+
+##### decrypt
+```python
+decrypt(input_path: str, output_path: str) -> bool
+```
+解密 EPUB 文件。
+
+**参数：**
+- `input_path` (str): 输入加密文件路径
+- `output_path` (str): 输出解密文件路径
+
+**返回：**
+- `bool`: 是否成功
+
+##### encrypt_fonts
+```python
+encrypt_fonts(input_path: str, output_path: str) -> bool
+```
+仅加密字体文件。
+
+**参数：**
+- `input_path` (str): 输入 EPUB 文件路径
+- `output_path` (str): 输出文件路径
+
+**返回：**
+- `bool`: 是否成功
+
+### EbookConverter 类
+
+电子书格式转换器，支持多种格式之间的互相转换。
+
+#### 构造函数
+```python
+EbookConverter(
+    output_format: str = 'epub',
+    input_profile: str = 'default',
+    output_profile: str = 'default',
+    config: Optional[ConverterConfig] = None
+)
+```
+
+**参数：**
+- `output_format` (str): 输出格式 ('epub', 'mobi', 'azw3', 'fb2')
+- `input_profile` (str): 输入设备配置文件
+- `output_profile` (str): 输出设备配置文件
+- `config` (ConverterConfig, optional): 转换配置
+
+#### 主要方法
+
+##### convert
+```python
+convert(input_path: str, output_path: str) -> bool
+```
+执行格式转换。
+
+**参数：**
+- `input_path` (str): 输入文件路径
+- `output_path` (str): 输出文件路径
+
+**返回：**
+- `bool`: 是否成功
+
+**示例：**
+```python
+converter = EbookConverter(
+    output_format='mobi',
+    output_profile='kindle'
+)
+converter.convert('input.epub', 'output.mobi')
+```
+
+### EPUBSanitizer 类
+
+EPUB 标准化器，用于将 EPUB 升级到 3.0 标准并清理优化。
+
+#### 构造函数
+```python
+EPUBSanitizer(config: Optional[SanitizerConfig] = None)
+```
+
+**参数：**
+- `config` (SanitizerConfig, optional): 标准化配置
+
+#### 主要方法
+
+##### sanitize
+```python
+sanitize(input_path: str, output_path: str) -> bool
+```
+执行标准化处理。
+
+**参数：**
+- `input_path` (str): 输入 EPUB 文件路径
+- `output_path` (str): 输出文件路径
+
+**返回：**
+- `bool`: 是否成功
+
+##### sanitize_batch
+```python
+sanitize_batch(tasks: List[Tuple[str, str]]) -> List[bool]
+```
+批量标准化处理。
+
+**参数：**
+- `tasks` (list): 任务列表，每个任务为 (input_path, output_path) 元组
+
+**返回：**
+- `list`: 每个任务的处理结果
+
+**示例：**
+```python
+config = SanitizerConfig(
+    epub_version='3.0',
+    filters=['default', 'privacy', 'css'],
+    threads='multi'
+)
+sanitizer = EPUBSanitizer(config=config)
+sanitizer.sanitize('input.epub', 'output.epub')
+```
+
+### BatchProcessor 类
+
+批量处理器，用于批量处理多个文件。
+
+#### 构造函数
+```python
+BatchProcessor(
+    processor: str,
+    config: Optional[Dict[str, Any]] = None,
+    max_workers: int = 4
+)
+```
+
+**参数：**
+- `processor` (str): 处理器类型 ('cleaner', 'encryptor', 'converter', 'sanitizer')
+- `config` (dict, optional): 处理器配置
+- `max_workers` (int): 最大并行工作线程数
+
+#### 主要方法
+
+##### add_task
+```python
+add_task(input_path: str, output_path: str, **kwargs) -> None
+```
+添加处理任务。
+
+**参数：**
+- `input_path` (str): 输入文件路径
+- `output_path` (str): 输出文件路径
+- `**kwargs`: 额外参数
+
+##### process
+```python
+process() -> List[bool]
+```
+执行所有任务。
+
+**返回：**
+- `list`: 每个任务的处理结果
+
+**示例：**
+```python
+batch = BatchProcessor(processor='sanitizer', max_workers=4)
+batch.add_task('input1.epub', 'output1.epub')
+batch.add_task('input2.epub', 'output2.epub')
+batch.add_task('input3.epub', 'output3.epub')
+results = batch.process()
+```
 
 ### FileSystem 抽象类
 
@@ -397,12 +924,7 @@ DiskFS(base_path: str)
 ```
 Ryuri/
 ├── RyuriCore/
-│   ├── RyuriCore.py      # 核心功能实现
-│   └── example/          # 示例文件
-│       ├── a.epub        # 源文件示例
-│       ├── dk.epub       # 多看精排版示例
-│       ├── zy.epub       # 掌阅精排版示例
-│       └── stk.epub      # Kindle 精排版示例
+│   └── RyuriCore.py      # 核心功能实现
 ├── README.md             # 本文件
 └── LICENSE               # 许可证
 ```
@@ -436,6 +958,25 @@ MIT License
 
 ## 更新日志
 
+### v1.1.0
+- 新增 EPUB 加密/解密功能
+  - 支持 MD5/SHA256 加密算法
+  - 支持文件名混淆
+  - 支持字体文件加密
+  - 与 epub_tool 完全兼容
+- 新增电子书格式转换功能
+  - 支持 EPUB/MOBI/AZW3/FB2 互转
+  - 支持设备配置文件
+  - 支持图片压缩和优化
+- 新增 EPUB 3.0 标准化功能
+  - 支持 EPUB 2.0 升级到 3.0
+  - 支持 HTML5 适配
+  - 支持多过滤器链式处理
+  - 支持隐私数据清理
+- 新增批量处理功能
+  - 支持多线程并行处理
+  - 支持任务队列管理
+
 ### v1.0.0
 - 初始版本发布
 - 实现 EPUB 精排版清洗功能
@@ -445,5 +986,4 @@ MIT License
 
 ## 联系方式
 
-- GitHub: [https://github.com/yourusername/ryuri](https://github.com/yourusername/ryuri)
-- Email: your.email@example.com
+- GitHub: [https://github.com/Asteroidmple/Ryuri](https://github.com/Asteroidmple/Ryuri)
