@@ -63,7 +63,14 @@
 
 ### 环境要求
 - Python 3.7+
-- 无需额外依赖（仅使用 Python 标准库）
+
+### 依赖说明
+Ryuri 完全基于 Python 标准库开发，**无需安装任何第三方依赖包**。所有功能仅使用 Python 内置模块实现，确保项目的轻量性和跨平台兼容性。
+
+使用的标准库模块包括：
+- `os`, `sys`, `argparse`, `zipfile`, `tempfile`, `json`, `logging`, `shutil`, `re`, `copy`, `hashlib`, `time`
+- `typing`, `contextlib`, `urllib.parse`, `xml.etree.ElementTree`, `xml.dom.minidom`, `difflib`, `datetime`
+- `concurrent.futures`, `enum`, `abc`, `io`, `base64`
 
 ### 安装步骤
 ```bash
@@ -71,7 +78,7 @@
 git clone https://github.com/Asteroidmple/Ryuri.git
 cd ryuri
 
-# 直接使用
+# 直接使用（无需安装依赖）
 python RyuriCore/RyuriCore.py --help
 ```
 

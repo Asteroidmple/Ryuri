@@ -1,0 +1,46 @@
+MIT License
+
+Copyright (c) 2025 Asteroidmple
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---
+
+Acknowledgements:
+
+This project was inspired by the following open-source projects:
+
+1. epub_tool (https://github.com/cnwxi/epub_tool)
+   - License: MIT License
+   - Inspiration: EPUB encryption/decryption functionality
+
+2. EpubSanitizer (https://github.com/qinlili23333/EpubSanitizer)
+   - License: AGPL-3.0 or Qinlili Universal License
+   - Inspiration: EPUB 3.0 standardization and sanitization concepts
+
+3. calibre (https://github.com/kovidgoyal/calibre)
+   - License: GPL-3.0
+   - Inspiration: E-book format conversion functionality
+
+We thank the authors of these projects for their excellent work and contributions
+to the open-source community.
+
+Note: This project is an independent implementation and does not contain any
+code from the above-mentioned projects. All code in this repository is
+originally written and released under the MIT License.
